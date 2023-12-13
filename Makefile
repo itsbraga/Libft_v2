@@ -6,7 +6,7 @@
 #    By: annabrag <annabrag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 11:07:10 by annabrag          #+#    #+#              #
-#    Updated: 2023/12/13 19:27:30 by annabrag         ###   ########.fr        #
+#    Updated: 2023/12/13 20:02:43 by annabrag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ RM		=	rm -rf
 
 # The -MMD flags additionaly creates a .d file with
 # the same name as the .o file.
-DEPS_FLAGS	=	-MMD
+DEPS_FLAGS	=	$(addprefix -I,$(INC)) -MMD -MP
 
 ############################# SOURCES #############################
 
@@ -157,13 +157,25 @@ OBJ		= $(addprefix $(OBJ_DIR), $(OBJ_NAMES))
 
 DEPS_DIR	= deps/
 
+DEPS_NAMES	= $(OBJ_NAMES:.o=.d)
+
+DEPS_FOLDERS	= $(addprefix $(DEPS_DIR), $(FT_FD_DIR) \
+                	$(FT_IS_DIR) \
+			$(FT_MEM_DIR) \
+			$(FT_STR_DIR) \
+                        $(FT_TO_DIR) \
+			$(FT_LST_DIR) \
+                	$(GNL_DIR) \
+			$(FT_PRINTF_DIR))
+
+DEPS		= $(addprefix $(DEPS_DIR), $(DEPS_NAMES))
+
 # gcc/clang will create these .d files containing dependencies
-DEPS		= $(patsubst $(SRC_DIR)/%.c,$(DEPS_DIR)/%.d,$(SRC_NAMES))
 
 
 ################################### RULES ###################################
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
 			@mkdir -p $(dir $@)
 			@printf "$(ITAL)$(ORANGE)Compiling: $(RESET)$(ITAL)$<\n"
 			@$(CC) $(CFLAGS) $(INC) $(DEPS_FLAGS) -c $< -o $@
