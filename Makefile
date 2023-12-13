@@ -6,7 +6,7 @@
 #    By: annabrag <annabrag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 11:07:10 by annabrag          #+#    #+#              #
-#    Updated: 2023/12/13 20:02:43 by annabrag         ###   ########.fr        #
+#    Updated: 2023/12/13 20:49:35 by annabrag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,9 +42,9 @@ BRIGHT_CYAN	:=	\e[96m
 ############################## BASICS ##############################
 
 NAME		=	libft.a
-INC		=	-I include/
 CC		=	cc
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -I
+INC		=	include/
 FSANITIZE	=	-fsanitize=address -g3
 LIBC		=	ar -rcs
 RM		=	rm -rf
@@ -170,8 +170,6 @@ DEPS_FOLDERS	= $(addprefix $(DEPS_DIR), $(FT_FD_DIR) \
 
 DEPS		= $(addprefix $(DEPS_DIR), $(DEPS_NAMES))
 
-# gcc/clang will create these .d files containing dependencies
-
 
 ################################### RULES ###################################
 
@@ -206,6 +204,6 @@ re:		fclean all
 
 norm:
 			@clear
-			@norminette $(SRC_NAMES) $(INC)
+			@norminette $(SRC_DIR) $(INC) | grep -v Norme -B1 || true
 
 .PHONY:		all clean fclean re norm
